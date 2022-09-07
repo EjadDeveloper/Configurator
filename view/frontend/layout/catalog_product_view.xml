@@ -3,7 +3,7 @@
     xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="before.body.end">
-            <block class="Magento\Framework\View\Element\Text" name="angular_app">
+            <block class="Magento\Framework\View\Element\Text" name="react_app">
                 <arguments>
                     <argument name="text" xsi:type="string">
                         <![CDATA[<script type="text/javascript" src="//ctech-frontend.opgtest.com/js/angular-app/widget/cti-widget.js"></script>]]>
@@ -12,13 +12,13 @@
             </block>
         </referenceContainer>
         <referenceContainer name="content">
-            <block class="Ctech\Configurator\Block\Product\View" name="product.view.angular"
-                template="Ctech_Configurator::product/view/angular.phtml" after="product.detail.info">
+            <block class="Ctech\Configurator\Block\Product\View" name="product.view.react"
+                template="Ctech_Configurator::product/view/react.phtml" after="product.detail.info">
             </block>
             <referenceContainer name="product.info.form.content">
                 <block class="Magento\Catalog\Block\Product\View" name="product.info.addtocart" as="addtocart"
                     template="Ctech_Configurator::product/view/addtocart.phtml" />
             </referenceContainer>
         </referenceContainer>
-        </body>
+    </body>
 </page>

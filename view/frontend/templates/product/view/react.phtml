@@ -1,0 +1,62 @@
+<?php /* @var $block \Ctech\Configurator\Block\Product\View */ ?>
+<div class="product configurator">
+    <?php
+    $helper = $this->helper('Ctech\Configurator\Helper\Data');
+    $product = $block->getProduct();
+    if ($helper->isCtechProduct($product)) :
+        $brand_code = $product->getData("brand_code");
+        $product_line_code = $product->getData("product_line_code");
+        $session = $block->getCustomerSession();
+        $session_id = $session->getData("visitor_data")["session_id"];
+        $storeKey = $helper->getStoreConfig("store_key");
+        ?>
+        <?php if ($brand_code && $product_line_code && $storeKey) : ?>
+            <div id="configurator">
+                <?php echo $block->getBlockHtml('formkey'); ?>
+                <div class="clearfix mar-t20 text-center" id="showLoader" align="center">
+                    <img src="//ctiapi.com/images/ajax-loader.gif" alt="<?php echo __("Loading"); ?>">
+                </div>
+            </div>
+            <script type="text/javascript">
+                require([], function() {
+                    (function () {
+                        var loadConfigurator = function () {
+                            const options = {
+                                apiKey: "<?php echo $storeKey; ?>",
+                                brandCode: "<?php echo $brand_code; ?>",
+                                productLineCode: "<?php echo $product_line_code; ?>",
+                                container: "configurator",
+                                postBackUrl: '<?php echo $block->getUrl("configurator/index/configure"); ?>',
+                                redirectUrl: '<?php echo $block->getUrl("checkout/cart/index"); ?>',
+                                etailerPostBackParameters: {
+                                    sid: '<?php echo $block->escapeHtml($session_id) ?>',
+                                    product_id: '<?php echo $product->getId() ?>',
+                                    sku: '<?php echo $block->escapeHtml($product->getSku()) ?>',
+                                    customer_id: null
+                                }
+                            }
+                            Configurator.init(options);
+                            var myContainer = document.getElementById("configurator");
+                            /// the following should be deleted?
+                            myContainer.addEventListener("addToCartCompleted",
+                                function (event) {}, false
+                            );
+                        }
+                        switch (document) {
+                            case document.readyState === 'complete':
+                            case (document.readyState !== "loading" && !document.documentElement.doScroll):
+                                loadConfigurator();
+                                break;
+                            default:
+                                document.addEventListener("DOMContentLoaded", loadConfigurator);
+                        }
+                    })();
+                });
+            </script>
+        <?php else : ?>
+            <p class="error">
+                <?php echo $block->escapeHtml(__("this product has a missing configuration")); ?>
+            </p>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
